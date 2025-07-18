@@ -5,6 +5,7 @@ import Image from 'next/image';
 import products from '@/data/products';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -26,9 +27,11 @@ export default function Home() {
                 width={300}
                 height={300}
               />
-              <h2 className="text-lg font-semibold">{product.name}</h2>
-              <p className="text-sm text-gray-500">{product.category}</p>
-              <p className="font-bold mt-1">¥{product.price.toLocaleString()}</p>
+              <Link href={`/products/${product.id}`}>
+                <h2 className="text-lg font-semibold text-blue-600 hover:underline">
+                  {product.name}
+                </h2>
+              </Link>
             </div>
           ))}
         </div>
