@@ -6,6 +6,7 @@ export default function Header() {
       <nav className="flex gap-4">
         <Link href="/" className="hover:underline">ホーム</Link>
         <Link href="/about" className="hover:underline">このサイトについて</Link>
+        <Link href="/cart" className="text-white">カートを見る</Link>
       </nav>
     </header>
   );

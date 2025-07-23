@@ -1,3 +1,5 @@
+'use client';
+
 import '../styles/globals.css'
 
 import Head from 'next/head';
@@ -6,8 +8,31 @@ import products from '@/data/products';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useCart } from '@/context/cart';
 
 export default function Home() {
+  const [showMessage, setShowMessage] = useState(false);
+
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (product: typeof products[number]) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+    });
+
+    setShowMessage(true);
+
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 3000);
+
+  };
+
   return (
     <>
       <Head>
@@ -16,6 +41,11 @@ export default function Home() {
 
       <Header />
       <main className="max-w-6xl mx-auto p-4">
+        {showMessage && (
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition">
+            商品をカートに追加しました
+          </div>
+        )}
         <h1 className="text-2xl font-bold mb-4">商品一覧</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {products.map((product) => (
@@ -32,6 +62,9 @@ export default function Home() {
                   {product.name}
                 </h2>
               </Link>
+              <button onClick={() => handleAddToCart(product)} className="w-full mt-2 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
+                カートに追加
+              </button>
             </div>
           ))}
         </div>
