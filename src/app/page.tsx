@@ -11,6 +11,25 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/context/cart';
 
+export const metadata = {
+  title: 'ショッピングサイト｜トップページ',
+  description: '人気商品を揃えたオンラインショッピングサイトです。',
+  openGraph: {
+    title: 'ショッピングサイト｜トップページ',
+    description: '人気商品を揃えたオンラインショッピングサイトです。',
+    url: 'https://aiqveone-test-shopping-domain.com/',
+    siteName: 'ショッピングサイト',
+    locale: 'ja_JP',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_image',
+    title: 'ショッピングサイト',
+    description: '人気商品を揃えたオンラインショッピングサイトです。',
+  },
+};
+
+
 export default function Home() {
   const [showMessage, setShowMessage] = useState(false);
 

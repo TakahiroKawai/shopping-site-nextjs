@@ -1,12 +1,35 @@
 import { notFound } from 'next/navigation';
 import products from '@/data/products';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
 type Props = {
   params: {
     id: string;
   };
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const productId = Number(params.id);
+  const product = products.find((p) => p.id === productId);
+
+  if (!product) {
+    return {
+      title: '商品が見つかりません',
+      description: '指定された商品は存在しません',
+    };
+  }
+
+  return {
+    title: `${product.name} | 商品詳細`,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.image],
+    }
+  };
+}
 
 export default async function ProductDetail({ params }: Props) {
   const { id } = await params
