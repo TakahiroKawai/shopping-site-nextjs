@@ -4,53 +4,34 @@ import '../styles/globals.css'
 
 import Head from 'next/head';
 import Image from 'next/image';
-import products from '@/data/products';
+import Products from '@/data/products';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Link from 'next/link';
+import Modal from '@/components/modal'
+import { ProductType } from '@/data/products';
 import { useState } from 'react';
 import { useCart } from '@/context/cart';
 
-export const metadata = {
-  title: 'ショッピングサイト｜トップページ',
-  description: '人気商品を揃えたオンラインショッピングサイトです。',
-  openGraph: {
-    title: 'ショッピングサイト｜トップページ',
-    description: '人気商品を揃えたオンラインショッピングサイトです。',
-    url: 'https://aiqveone-test-shopping-domain.com/',
-    siteName: 'ショッピングサイト',
-    locale: 'ja_JP',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_image',
-    title: 'ショッピングサイト',
-    description: '人気商品を揃えたオンラインショッピングサイトです。',
-  },
-};
-
-
 export default function Home() {
-  const [showMessage, setShowMessage] = useState(false);
+  const [showMessage] = useState(false);
 
   const { addToCart } = useCart();
+  const [showModal, setShowModal] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<ProductType>()
 
-  const handleAddToCart = (product: typeof products[number]) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      quantity: 1,
-    });
+  const handleAddToCart = (product: ProductType) => {
+    setSelectedProduct(product)
+    setShowModal(true)
+  }
 
-    setShowMessage(true);
-
-    setTimeout(() => {
-      setShowMessage(false);
-    }, 3000);
-
-  };
+  const handleConfirm = () => {
+    if (selectedProduct) {
+      addToCart({ ...selectedProduct, quantity: 1 })
+    }
+    setShowModal(false)
+    setSelectedProduct(selectedProduct)
+  }
 
   return (
     <>
@@ -67,15 +48,9 @@ export default function Home() {
         )}
         <h1 className="text-2xl font-bold mb-4">商品一覧</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((product) => (
+          {Products.map((product) => (
             <div key={product.id} className="border rounded shadow-sm p-4">
-              <Image
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover mb-2"
-                width={300}
-                height={300}
-              />
+              <Image src={product.image} alt={product.name} className="w-full h-48 object-cover mb-2" width={300} height={300} priority/>
               <Link href={`/products/${product.id}`}>
                 <h2 className="text-lg font-semibold text-blue-600 hover:underline">
                   {product.name}
@@ -87,6 +62,7 @@ export default function Home() {
             </div>
           ))}
         </div>
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)} onConfirm={handleConfirm} title="カートに追加" message="この商品をカートに追加しますか？" confirmText="追加する"/>
       </main>
       <Footer/>
     </>

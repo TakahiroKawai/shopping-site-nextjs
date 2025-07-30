@@ -1,4 +1,13 @@
-const products = [
+export type ProductType = {
+  id: number
+  name: string
+  description: string
+  price: number
+  category: string
+  image: string
+}
+
+const Products : ProductType[] = [
     {
         id: 1,
         name: 'Tシャツ',
@@ -33,4 +42,4 @@ const products = [
     }
 ];
 
-export default products;
+export default Products;

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import products from '@/data/products';
+import Products from '@/data/products';
 import Image from 'next/image';
 import { Metadata } from 'next';
 
@@ -11,7 +11,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const productId = Number(params.id);
-  const product = products.find((p) => p.id === productId);
+  const product = Products.find((p) => p.id === productId);
 
   if (!product) {
     return {
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductDetail({ params }: Props) {
   const { id } = await params
   const productId = Number(id);
-  const product = products.find((p) => p.id === productId);
+  const product = Products.find((p) => p.id === productId);
 
   if (!product) {
     return notFound();

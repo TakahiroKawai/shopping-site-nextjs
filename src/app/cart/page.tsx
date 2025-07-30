@@ -1,11 +1,29 @@
 "use client";
 
+import { useState } from 'react'
 import { useCart } from "@/context/cart";
+import Modal from '@/components/modal'
 import Image from "next/image";
 import Link from "next/link";
 
 export default function CartPage() {
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, removeFromCart, clearCart } = useCart();
+
+  const [showModal, setShowModal] = useState(false)
+  const [targetId, setTargetId] = useState<number | null>(null)
+
+  const handleClickDelete = (id: number) => {
+    setTargetId(id)
+    setShowModal(true)
+  }
+
+  const handleConfirm = () => {
+    if (targetId !== null) {
+      removeFromCart(targetId)
+    }
+    setShowModal(false)
+    setTargetId(null)
+  }
 
   return (
     <div className="p-6">
@@ -29,6 +47,9 @@ export default function CartPage() {
                 <p>価格: ¥{item.price.toLocaleString()}</p>
                 <p>数量: {item.quantity}</p>
               </div>
+              <button className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => handleClickDelete(item.id)}>
+                削除
+              </button>
             </div>
           ))}
 
@@ -50,6 +71,8 @@ export default function CartPage() {
           商品一覧に戻る
         </Link>
       </div>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} onConfirm={handleConfirm} title="削除の確認" message="この商品をカートから削除しますか？" confirmText="削除する"/>
     </div>
   );
 }
