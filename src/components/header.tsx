@@ -1,12 +1,23 @@
+'use client';
+
+import AuthButton from '@/components/authbutton'
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function Header() {
+  const { data: session } = useSession();
+  
   return (
     <header className="bg-blue-600 text-white p-4">
       <nav className="flex gap-4">
         <Link href="/" className="hover:underline">ホーム</Link>
         <Link href="/about" className="hover:underline">このサイトについて</Link>
-        <Link href="/cart" className="text-white">カートを見る</Link>
+        <AuthButton/>
+        {session && (
+          <Link href="/cart" className="text-blue-600 hover:underline">
+            カートを見る
+          </Link>
+        )}
       </nav>
     </header>
   );
