@@ -6,6 +6,7 @@ import Modal from '@/components/modal';
 import { FakeProductType } from '@/app/lib/api';
 import { useState, useMemo } from 'react';
 import { useCart } from '@/context/cart';
+import { useFavorite } from '@/context/favoritecontext';
 
 type ProductProps = {
   products: FakeProductType[];
@@ -13,6 +14,7 @@ type ProductProps = {
 
 export default function Products({ products }: ProductProps) {
   const { addToCart } = useCart();
+  const { favorites, toggleFavorite } = useFavorite();
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<FakeProductType>();
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -58,7 +60,10 @@ export default function Products({ products }: ProductProps) {
 
       <h1 className="text-2xl font-bold mb-4">商品一覧</h1>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filteredAndSortedProducts.map((product) => (
+        {filteredAndSortedProducts.map((product) => {
+          const isFavorite = favorites.includes(product.id);
+
+          return (
           <div key={product.id} className="border rounded shadow-sm p-4 min-h-[360px] flex flex-col justify-between">
             <div className="w-full h-[250px] flex items-center justify-center mt-2 mb-4">
                 <Image src={product.image} alt={product.title} className="object-contain max-h-full" width={300} height={300} style={{ objectFit: 'contain' }} priority/>
@@ -74,8 +79,12 @@ export default function Products({ products }: ProductProps) {
             <button onClick={() => handleAddToCart(product)} className="w-full mx-auto mt-2 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
               カートに追加
             </button>
+            <button onClick={() => toggleFavorite(product.id)}>
+              {isFavorite ? '❤️ お気に入り解除' : '🤍 お気に入り'}
+            </button>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} onConfirm={handleConfirm} title="カートに追加" message="この商品をカートに追加しますか？" confirmText="追加する"/>
