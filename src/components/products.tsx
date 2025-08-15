@@ -59,22 +59,24 @@ export default function Products({ products }: ProductProps) {
       </div>
 
       <h1 className="text-2xl font-bold mb-4">商品一覧</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredAndSortedProducts.map((product) => {
           const isFavorite = favorites.includes(product.id);
 
           return (
           <div key={product.id} className="border rounded shadow-sm p-4 min-h-[360px] flex flex-col justify-between">
             <div className="w-full h-[250px] flex items-center justify-center mt-2 mb-4">
-                <Image src={product.image} alt={product.title} className="object-contain max-h-full" width={300} height={300} style={{ objectFit: 'contain' }} priority/>
+                <Image src={product.image} alt={product.title} className="w-full h-[200px] object-contain" width={300} height={300} style={{ objectFit: 'contain' }} priority/>
             </div>
             <Link href={`/products/${product.id}`}>
-              <h2 className="text-lg font-semibold text-blue-600 hover:underline">
-                {product.title}
-              </h2>
-            <span className="text-gray-700 text-sm ml-2">
-                ${product.price.toLocaleString()}
-            </span>
+              <div className='flex flex-col'>
+                <h2 className="text-lg md:text-xl font-semibold truncate text-center">
+                  {product.title}
+                </h2>
+                <span className="text-sm md:text-base text-center">
+                    ${product.price.toLocaleString()}
+                </span>
+              </div>
             </Link>
             <button onClick={() => handleAddToCart(product)} className="w-full mx-auto mt-2 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
               カートに追加
