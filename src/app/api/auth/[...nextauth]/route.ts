@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 
 // 本来はセキュリティのためにシークレットなどはソースコードに直接記述しないが今回は勉強用サイトとして動作しやすさを優先するためにソースコードに直接記述する
-const handler = NextAuth({
+export const handler = NextAuth({
   providers: [
     GitHubProvider({
       clientId: 'Iv23li6omrzhJETTKUxQ',
@@ -10,6 +10,9 @@ const handler = NextAuth({
     }),
   ],
   secret: 'Qdl03y8W7kA6dGD1b4xATFwvXQDHk7DN2pdCsBuzFwU=',
+  session: {
+    strategy: "jwt",
+  },
 });
 
 export { handler as GET, handler as POST };

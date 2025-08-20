@@ -14,9 +14,11 @@ export default function Header() {
         <Link href="/about" className="hover:underline">このサイトについて</Link>
         <AuthButton/>
         {session && (
-          <Link href="/cart" className="text-blue-600 hover:underline">
-            カートを見る
-          </Link>
+          <>
+            <Link href="/profile">プロフィール</Link>
+            <Link href="/cart" className="text-blue-600 hover:underline">カートを見る</Link>
+            <Link href="/orders" className="ml-4 text-blue-600 hover:underline">注文履歴</Link>
+          </>
         )}
       </nav>
     </header>
