@@ -15,9 +15,9 @@ export default function Header() {
         <AuthButton/>
         {session && (
           <>
-            <Link href="/profile">プロフィール</Link>
-            <Link href="/cart" className="text-blue-600 hover:underline">カートを見る</Link>
-            <Link href="/orders" className="ml-4 text-blue-600 hover:underline">注文履歴</Link>
+            <Link href="/profile" className="hover:underline">プロフィール</Link>
+            <Link href="/cart" className="hover:underline">カートを見る</Link>
+            <Link href="/orders" className="over:underline">注文履歴</Link>
           </>
         )}
       </nav>
