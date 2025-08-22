@@ -6,8 +6,8 @@ export default function AuthButton() {
   const { data: session } = useSession();
 
   return session ? (
-    <button onClick={() => signOut()}>ログアウト</button>
+    <button onClick={() => signOut()} className="hover:underline">ログアウト</button>
   ) : (
-    <button onClick={() => signIn()}>ログイン</button>
+    <button onClick={() => signIn()} className="hover:underline">ログイン</button>
   );
 }
