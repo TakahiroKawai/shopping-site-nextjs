@@ -22,6 +22,7 @@ export default function Header() {
         {session && (
           <>
             <Link href="/profile" className="content-center hover:underline">プロフィール</Link>
+            <Link href="/favorites" className="content-center hover:underline">お気に入り一覧</Link>
             <Link href="/cart" className="content-center hover:underline">カートを見る</Link>
             <Link href="/orders" className="content-center hover:underline">注文履歴</Link>
           </>

@@ -81,9 +81,6 @@ export default function Products({ products }: ProductProps) {
             <button onClick={() => handleAddToCart(product)} className="w-full mx-auto mt-2 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md">
               カートに追加
             </button>
-            <button onClick={() => toggleFavorite(product.id)}>
-              {isFavorite ? '❤️ お気に入り解除' : '🤍 お気に入り'}
-            </button>
           </div>
           );
         })}

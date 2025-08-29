@@ -17,6 +17,16 @@ export type PaginationDataType = {
   totalPages: number;
 };
 
+export const fetchProductData = async (id: string): Promise<FakeProductType> => {
+  const res = await fetch(`https://fakestoreapi.com/products/${id}`);
+  if (!res.ok) {
+    throw new Error('Failed to fetch products');
+  }
+  const product = await res.json();
+
+  return product;
+}
+
 export const fetchPaginationData = async (page: number, limit: number): Promise<PaginationDataType> => {
   const res = await fetch('https://fakestoreapi.com/products');
   if (!res.ok) {

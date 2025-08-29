@@ -1,7 +1,9 @@
-import { notFound } from 'next/navigation';
-import Products from '@/data/products';
 import Image from 'next/image';
+import ProductReviews from '@/components/productreviews';
+import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { fetchProductData } from '@/app/lib/api';
+import FavoriteButton from '@/components/favritebutton';
 
 type Props = {
   params: {
@@ -9,9 +11,9 @@ type Props = {
   };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const productId = Number(params.id);
-  const product = Products.find((p) => p.id === productId);
+export async function generateMetadata({ params } : Props): Promise<Metadata> {
+  const { id } = await params;
+  const product = await fetchProductData(id);
 
   if (!product) {
     return {
@@ -21,10 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.name} | 商品詳細`,
+    title: `${product.title} | 商品詳細`,
     description: product.description,
     openGraph: {
-      title: product.name,
+      title: product.title,
       description: product.description,
       images: [product.image],
     }
@@ -32,20 +34,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductDetail({ params }: Props) {
-  const { id } = await params
-  const productId = Number(id);
-  const product = Products.find((p) => p.id === productId);
+  const { id } = await params;
+  const product = await fetchProductData(id);
 
   if (!product) {
     return notFound();
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
-      <Image src={product.image} alt={product.name} width={400} height={300} className="w-64 h-auto mb-4 object-contain"/>
-      <p className="text-gray-600 mb-2">{product.description}</p>
-      <p className="font-bold text-lg">{product.price}円</p>
-    </div>
+    <>
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-4">{product.title}</h1>
+        <Image src={product.image} alt={product.title} width={400} height={300} className="w-64 h-auto mb-4 object-contain"/>
+        <p className="text-gray-600 mb-2">{product.description}</p>
+        <p className="font-bold text-lg">{product.price}円</p>
+        <FavoriteButton product={product}/>
+      </div>
+      <ProductReviews productId={String(product.id)}/>
+    </>
   );
 }
