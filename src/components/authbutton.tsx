@@ -9,7 +9,7 @@ export default function AuthButton() {
 
   const handleGithubLogin = async () => {
     setLoading(true);
-    signIn('github');
+    await signIn('github', { callbackUrl: '/' });
     setLoading(false);
   };
 

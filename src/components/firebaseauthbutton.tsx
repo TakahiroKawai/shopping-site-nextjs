@@ -1,20 +1,31 @@
-import { useState } from "react";
-import { User, getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { User, getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { firebaseApp } from "../firebaseConfig";
+import { useRouter } from "next/navigation";
 
 export default function FirebaseAuthButton() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const firebaseAuth = getAuth(firebaseApp);
+
+  useEffect(() => {
+    const auth = getAuth(firebaseApp);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleLogin = async () => {
     setError(null);
     try {
-      const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
-      setUser(userCredential.user);
+      await signInWithEmailAndPassword(firebaseAuth, email, password).then(() => {
+        router.push('/');
+      });
     } catch (e: unknown) {
       if (e instanceof Error) {
         setError(e.message);
@@ -27,8 +38,9 @@ export default function FirebaseAuthButton() {
   const handleSignup = async () => {
     setError(null);
     try {
-      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-      setUser(userCredential.user);
+      await createUserWithEmailAndPassword(firebaseAuth, email, password).then(() => {
+        router.push('/');
+      });
     } catch (e: unknown) {
       if (e instanceof Error) {
         setError(e.message);
@@ -39,8 +51,9 @@ export default function FirebaseAuthButton() {
   };
 
   const handleLogout = async () => {
-    await signOut(firebaseAuth);
-    setUser(null);
+    await signOut(firebaseAuth).then(() => {
+      router.push('/');
+    });
   };
 
   return (
