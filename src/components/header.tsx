@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import StripeCheckoutButton from '@/components/stripecheckout';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
@@ -45,6 +46,7 @@ export default function Header() {
         <button onClick={() => setShouldError(true)} className="ml-auto px-4 bg-red-500 text-white rounded hover:bg-red-600 transition">
           エラーを発生させる
         </button>
+        <StripeCheckoutButton />
       </nav>
     </header>
   );
