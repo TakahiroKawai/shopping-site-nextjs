@@ -3,27 +3,16 @@
 import Link from 'next/link';
 import StripeCheckoutButton from '@/components/stripecheckout';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { firebaseApp } from '@/firebaseConfig';
+import { useState } from 'react';
 
 export default function Header() {
   const { data: session } = useSession();
   const [shouldError, setShouldError] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
 
   if (shouldError) {
     throw new Error('テスト用のエラーです');
   }
 
-  useEffect(() => {
-    const auth = getAuth(firebaseApp);
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-    });
-    return () => unsubscribe();
-  });
-  
   return (
     <header className="bg-blue-600 text-white p-4">
       <nav className="flex justify-between items-center px-6 gap-4">
@@ -31,10 +20,10 @@ export default function Header() {
         <Link href="/about" className="content-center hover:underline">このサイトについて</Link>
         <Link href="/sales" className="content-center hover:underline">売上チャート</Link>
         {
-          (!session && !user) && (
+          !session && (
             <Link href="/login" className="content-center hover:underline">ログイン</Link>
         )}
-        {(session || user) && (
+        {session && (
           <>
             <Link href="/profile" className="content-center hover:underline">プロフィール</Link>
             <Link href="/favorites" className="content-center hover:underline">お気に入り一覧</Link>
