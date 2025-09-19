@@ -18,14 +18,17 @@ export default function FirebaseAuthButton() {
       setUser(firebaseUser);
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleLogin = async () => {
     setError(null);
+    if (!email || !password) {
+      setError("メールアドレスとパスワードを入力してください");
+      return;
+    }
     try {
-      await signInWithEmailAndPassword(firebaseAuth, email, password).then(() => {
-        router.push('/');
-      });
+      await signInWithEmailAndPassword(firebaseAuth, email, password);
+      router.push('/');
     } catch (e: unknown) {
       if (e instanceof Error) {
         setError(e.message);
@@ -37,10 +40,13 @@ export default function FirebaseAuthButton() {
 
   const handleSignup = async () => {
     setError(null);
+    if (!email || !password) {
+      setError("メールアドレスとパスワードを入力してください");
+      return;
+    }
     try {
-      await createUserWithEmailAndPassword(firebaseAuth, email, password).then(() => {
-        router.push('/');
-      });
+      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      router.push('/');
     } catch (e: unknown) {
       if (e instanceof Error) {
         setError(e.message);
@@ -51,9 +57,8 @@ export default function FirebaseAuthButton() {
   };
 
   const handleLogout = async () => {
-    await signOut(firebaseAuth).then(() => {
-      router.push('/');
-    });
+    await signOut(firebaseAuth);
+    router.push('/');
   };
 
   return (
