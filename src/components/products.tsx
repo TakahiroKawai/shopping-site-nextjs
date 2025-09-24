@@ -6,7 +6,6 @@ import Modal from '@/components/modal';
 import { FakeProductType } from '@/app/lib/api';
 import { useState, useMemo } from 'react';
 import { useCart } from '@/context/cart';
-import { useFavorite } from '@/context/favoritecontext';
 
 type ProductProps = {
   products: FakeProductType[];
@@ -14,7 +13,6 @@ type ProductProps = {
 
 export default function Products({ products }: ProductProps) {
   const { addToCart } = useCart();
-  const { favorites, toggleFavorite } = useFavorite();
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<FakeProductType>();
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -61,8 +59,6 @@ export default function Products({ products }: ProductProps) {
       <h1 className="text-2xl font-bold mb-4">商品一覧</h1>
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredAndSortedProducts.map((product) => {
-          const isFavorite = favorites.includes(product.id);
-
           return (
           <div key={product.id} className="border rounded shadow-sm p-4 min-h-[360px] flex flex-col justify-between">
             <div className="w-full h-[250px] flex items-center justify-center mt-2 mb-4">
