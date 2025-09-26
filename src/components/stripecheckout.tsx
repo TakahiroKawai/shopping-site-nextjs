@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe("pk_test_51S5l9RFrsp1n52ggHijrXrjE7G2TXz4W1bjAO837uQlpx3oNFEarFv15O5QmuIoyhCA2SXaa97Ak7f7O7Nndxco300ENC1jNYR");

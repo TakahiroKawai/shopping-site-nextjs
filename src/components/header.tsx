@@ -1,5 +1,6 @@
 'use client';
 
+import React from "react";
 import Link from 'next/link';
 import StripeCheckoutButton from '@/components/stripecheckout';
 import { useSession } from 'next-auth/react';
