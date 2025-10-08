@@ -20,6 +20,7 @@ export default function Header() {
         <Link href="/" className="content-center hover:underline">ホーム</Link>
         <Link href="/about" className="content-center hover:underline">このサイトについて</Link>
         <Link href="/sales" className="content-center hover:underline">売上チャート</Link>
+        <Link href="/database" className="content-center hover:underline">データベース</Link>
         {
           !session && (
             <Link href="/login" className="content-center hover:underline">ログイン</Link>

@@ -3,7 +3,7 @@ import ProductReviews from '@/components/productreviews';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { fetchProductData } from '@/app/lib/api';
-import FavoriteButton from '@/components/favritebutton';
+import FavoriteButton from '@/components/favoritebutton';
 
 type Props = {
   params: {
