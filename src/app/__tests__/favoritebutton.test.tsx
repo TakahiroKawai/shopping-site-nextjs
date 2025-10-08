@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import FavoriteButton from "@/components/favritebutton";
+import FavoriteButton from "@/components/favoritebutton";
 
 const product = { id: 1, title: "test", price: 100, description: "", category: "", image: "", rating: { rate: 0, count: 0 } };
 
