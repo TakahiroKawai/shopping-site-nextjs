@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from 'next/link';
-import StripeCheckoutButton from '@/components/stripecheckout';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -19,8 +18,6 @@ export default function Header() {
       <nav className="flex justify-between items-center px-6 gap-4">
         <Link href="/" className="content-center hover:underline">ホーム</Link>
         <Link href="/about" className="content-center hover:underline">このサイトについて</Link>
-        <Link href="/sales" className="content-center hover:underline">売上チャート</Link>
-        <Link href="/database" className="content-center hover:underline">データベース</Link>
         {
           !session && (
             <Link href="/login" className="content-center hover:underline">ログイン</Link>
@@ -34,10 +31,10 @@ export default function Header() {
             <Link href="/logout" className="content-center hover:underline">ログアウト</Link>
           </>
         )}
-        <button onClick={() => setShouldError(true)} className="ml-auto px-4 bg-red-500 text-white rounded hover:bg-red-600 transition">
+        <button onClick={() => setShouldError(true)} className="ml-auto mr-0 px-4 bg-red-500 text-white rounded hover:bg-red-600 transition">
           エラーを発生させる
         </button>
-        <StripeCheckoutButton />
+        <Link href="/test" className="content-center hover:underline">試験的機能ページ</Link>
       </nav>
     </header>
   );
