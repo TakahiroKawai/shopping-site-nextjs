@@ -1,9 +1,10 @@
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import prisma from "@/script/prismaclient";
+import type { AuthOptions, User } from "next-auth";
 
 // 本来はセキュリティのためにシークレットなどはソースコードに直接記述しないが今回は勉強用サイトとして動作しやすさを優先するためにソースコードに直接記述する
-export const handler = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     GitHubProvider({
       clientId: 'Iv23li6omrzhJETTKUxQ',
@@ -15,14 +16,14 @@ export const handler = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ user }) {
-      // ユーザーがDBにいなければ追加
-      const exist = await prisma.user.findUnique({ where: { email: user.email! } });
+    async signIn({ user }: { user: User }) {
+      if (!user?.email) return false;
+      const exist = await prisma.user.findUnique({ where: { email: user.email } });
       if (!exist) {
         await prisma.user.create({
           data: {
             name: user.name ?? "",
-            email: user.email!,
+            email: user.email,
             password: "",
           },
         });
@@ -30,6 +31,7 @@ export const handler = NextAuth({
       return true;
     },
   },
-});
+};
 
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

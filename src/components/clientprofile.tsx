@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Session } from "next-auth";
+import type { Profile as DbProfile } from "@prisma/client";
 
 type UserProfile = {
   name: string;
@@ -16,34 +17,78 @@ const DEFAULT_PROFILE: UserProfile = {
   name: "ゲストユーザー",
   age: "20",
   address: "東京都",
-  profileImageUrl: "/default-profile.png"
+  profileImageUrl: "/default-profile.png",
 };
 
-export default function ClientProfile({ session }: { session: Session }) {
+export default function ClientProfile({ session }: { session: Session | null }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const email = session?.user?.email ?? "";
 
   useEffect(() => {
-    const stored = localStorage.getItem('userProfile');
-    if (stored) {
-      setProfile(JSON.parse(stored));
+    async function load() {
+      if (email) {
+        try {
+          const res = await fetch(`/api/profile?email=${encodeURIComponent(email)}`);
+          if (res.ok) {
+            const data: DbProfile | null = await res.json();
+            if (data) {
+              setProfile({
+                name: session?.user?.name ?? DEFAULT_PROFILE.name,
+                age: data.age ?? DEFAULT_PROFILE.age,
+                address: data.address ?? DEFAULT_PROFILE.address,
+                profileImageUrl: data.profileImageUrl ?? (session?.user?.image ?? DEFAULT_PROFILE.profileImageUrl),
+              });
+              return;
+            }
+          }
+        } catch (e) {
+          console.error("failed to fetch profile", e);
+        }
+      }
+
+      const stored = localStorage.getItem("userProfile");
+      if (stored) {
+        setProfile(JSON.parse(stored));
+      } else {
+        localStorage.setItem("userProfile", JSON.stringify(DEFAULT_PROFILE));
+        setProfile(DEFAULT_PROFILE);
+      }
     }
-    else {
-      localStorage.setItem('userProfile', JSON.stringify(DEFAULT_PROFILE));
-      setProfile(DEFAULT_PROFILE);
+
+    load();
+  }, [email, session]);
+
+  useEffect(() => {
+    async function ensureServer() {
+      if (!profile || !email) return;
+      try {
+        await fetch("/api/profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            name: profile.name,
+            age: profile.age,
+            address: profile.address,
+            profileImageUrl: profile.profileImageUrl,
+          }),
+        });
+      } catch (e) {
+        console.error("failed to upsert profile", e);
+      }
     }
-  }, []);
+    ensureServer();
+  }, [profile, email]);
 
   if (!profile) return <p>プロフィール情報が見つかりません</p>;
 
   const user = {
     name: profile.name,
-    email: session.user?.email,
+    email,
     age: profile.age,
     address: profile.address,
     image: profile.profileImageUrl || "/default-profile.png",
   };
-
-  console.log(session)
 
   return (
     <div className="p-4 max-w-md mx-auto">

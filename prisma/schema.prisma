@@ -23,9 +23,20 @@ model Product {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  email     String  @unique
+  email     String   @unique
   password  String
+  profile   Profile?
   createdAt DateTime @default(now())
+}
+
+model Profile {
+  id              Int      @id @default(autoincrement())
+  user            User     @relation(fields: [userId], references: [id])
+  userId          Int      @unique
+  age             String?
+  address         String?
+  profileImageUrl String?
+  updatedAt       DateTime @updatedAt
 }
