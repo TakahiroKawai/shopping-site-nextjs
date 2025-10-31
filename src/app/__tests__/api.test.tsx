@@ -91,7 +91,7 @@ describe("profile API", () => {
       headers: { "Content-Type": "application/json" },
     });
 
-    const res = await POST(req as any);
+    const res = await POST(req as Request);
     const json = await res.json();
     expect(json).toHaveProperty("age", "31");
   });
